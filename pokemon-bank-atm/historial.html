@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Transacciones - Pokémon Bank</title>
+    <!-- Framework CSS: Bootstrap 4 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light pt-4">
+    <div class="container">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Historial de Transacciones</h4>
+                <a href="acciones.html" class="btn btn-sm btn-light text-primary font-weight-bold">Volver al Menú</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered text-center">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Tipo de Transacción</th>
+                                <th>Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>20/10/2026</td>
+                                <td>Depósito inicial</td>
+                                <td class="text-success font-weight-bold">+$500.00</td>
+                            </tr>
+                            <tr>
+                                <td>21/10/2026</td>
+                                <td>Pago de Servicios (Energía Eléctrica)</td>
+                                <td class="text-danger font-weight-bold">-$45.50</td>
+                            </tr>
+                            <tr>
+                                <td>21/10/2026</td>
+                                <td>Pago de Servicios (Internet)</td>
+                                <td class="text-danger font-weight-bold">-$30.00</td>
+                            </tr>
+                            <tr>
+                                <td>22/10/2026</td>
+                                <td>Retiro en cajero</td>
+                                <td class="text-danger font-weight-bold">-$100.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
