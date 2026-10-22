@@ -24,32 +24,35 @@
                                 <th>Monto</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>20/10/2026</td>
-                                <td>Depósito inicial</td>
-                                <td class="text-success font-weight-bold">+$500.00</td>
-                            </tr>
-                            <tr>
-                                <td>21/10/2026</td>
-                                <td>Pago de Servicios (Energía Eléctrica)</td>
-                                <td class="text-danger font-weight-bold">-$45.50</td>
-                            </tr>
-                            <tr>
-                                <td>21/10/2026</td>
-                                <td>Pago de Servicios (Internet)</td>
-                                <td class="text-danger font-weight-bold">-$30.00</td>
-                            </tr>
-                            <tr>
-                                <td>22/10/2026</td>
-                                <td>Retiro en cajero</td>
-                                <td class="text-danger font-weight-bold">-$100.00</td>
-                            </tr>
+                        <tbody id="tablaHistorial">
+                            <!-- Las transacciones se cargarán aquí dinámicamente -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        // Cargar historial del localStorage
+        const historial = JSON.parse(localStorage.getItem('atm_historial')) || [];
+        const tbody = document.getElementById('tablaHistorial');
+
+        if (historial.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='3' class='text-muted p-4'>Aún no has realizado transacciones</td></tr>";
+        } else {
+            // Recorrer el array e inyectar filas
+            historial.forEach(t => {
+                let colorCls = t.monto >= 0 ? 'text-success' : 'text-danger';
+                let signo = t.monto >= 0 ? '+' : '';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${t.fecha}</td>
+                        <td>${t.tipo}</td>
+                        <td class="${colorCls} font-weight-bold">${signo}$${t.monto.toFixed(2)}</td>
+                    </tr>`;
+            });
+        }
+    </script>
 </body>
 </html>

@@ -45,6 +45,7 @@
             <div>
                 <h4 class="mb-1">Bienvenido, Ash Ketchum</h4>
                 <p class="mb-0"><strong>Cuenta N°:</strong> 0987654321</p>
+                <p class="mb-0 mt-2 h5"><strong>Saldo Actual: </strong>$<span id="saldoVisual">0.00</span></p>
             </div>
             <div class="mt-2 mt-md-0">
                 <a href="index.html" class="btn btn-danger">Salir de la sesión</a>
@@ -56,16 +57,16 @@
         <!-- Opciones del cajero -->
         <div class="row">
             <div class="col-md-6">
-                <button class="btn btn-light btn-block action-btn text-primary" onclick="simularAccion('Depósito')">Depositar</button>
+                <button class="btn btn-light btn-block action-btn text-primary" onclick="depositar()">Depositar</button>
             </div>
             <div class="col-md-6">
-                <button class="btn btn-light btn-block action-btn text-primary" onclick="simularAccion('Retiro')">Retirar</button>
+                <button class="btn btn-light btn-block action-btn text-primary" onclick="retirar()">Retirar</button>
             </div>
             <div class="col-md-6">
-                <button class="btn btn-light btn-block action-btn text-primary" onclick="simularAccion('Consultar Saldo')">Consultar Saldo</button>
+                <button class="btn btn-light btn-block action-btn text-primary" onclick="consultarSaldo()">Consultar Saldo</button>
             </div>
             <div class="col-md-6">
-                <button class="btn btn-light btn-block action-btn text-primary" onclick="simularAccion('Pago de Servicios (Agua, Luz, Internet, Telefonía)')">Pago de Servicios</button>
+                <button class="btn btn-light btn-block action-btn text-primary" onclick="pagarServicio()">Pago de Servicios</button>
             </div>
         </div>
         
@@ -78,11 +79,81 @@
         </div>
     </div>
 
-    <!-- Librería SweetAlert para interacciones -->
+    <!-- Librería SweetAlert -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-        function simularAccion(tipo) {
-            swal("Transacción seleccionada", "Has elegido: " + tipo + ".\n(En una app real, aquí se abriría el formulario correspondiente).", "info");
+        // Cargar estado inicial del localStorage
+        let saldo = parseFloat(localStorage.getItem('atm_saldo')) || 0;
+        let historial = JSON.parse(localStorage.getItem('atm_historial')) || [];
+        
+        document.getElementById('saldoVisual').innerText = saldo.toFixed(2);
+
+        // actualizamos datos
+        function guardarEstado(tipo, monto) {
+            const fecha = new Date().toLocaleDateString('es-SV');
+            historial.push({ fecha, tipo, monto });
+            localStorage.setItem('atm_saldo', saldo.toString());
+            localStorage.setItem('atm_historial', JSON.stringify(historial));
+            document.getElementById('saldoVisual').innerText = saldo.toFixed(2);
+        }
+
+        function depositar() {
+            swal({
+                text: "Ingrese el monto a depositar:",
+                content: "input",
+                button: { text: "Depositar" }
+            }).then(val => {
+                let monto = parseFloat(val);
+                if (monto > 0) {
+                    saldo += monto;
+                    guardarEstado("Depósito", monto);
+                    swal("Éxito", `Se han depositado $${monto.toFixed(2)}`, "success");
+                } else if(val !== null) {
+                    swal("Error", "Monto inválido.", "error");
+                }
+            });
+        }
+
+        function retirar() {
+            swal({
+                text: "Ingrese el monto a retirar:",
+                content: "input",
+                button: { text: "Retirar" }
+            }).then(val => {
+                let monto = parseFloat(val);
+                if (monto > 0 && monto <= saldo) {
+                    saldo -= monto;
+                    guardarEstado("Retiro", -monto);
+                    swal("Éxito", `Retiro de $${monto.toFixed(2)} exitoso.`, "success");
+                } else if (monto > saldo) {
+                    swal("Fondos insuficientes", "No tienes suficiente dinero.", "error");
+                } else if(val !== null) {
+                    swal("Error", "Monto inválido.", "error");
+                }
+            });
+        }
+
+        function pagarServicio() {
+            swal({
+                text: "Ingrese el monto del servicio a pagar:",
+                content: "input",
+                button: { text: "Pagar" }
+            }).then(val => {
+                let monto = parseFloat(val);
+                if (monto > 0 && monto <= saldo) {
+                    saldo -= monto;
+                    guardarEstado("Pago de Servicio", -monto);
+                    swal("Éxito", `Pago de $${monto.toFixed(2)} procesado.`, "success");
+                } else if (monto > saldo) {
+                    swal("Fondos insuficientes", "No tienes dinero suficiente.", "error");
+                } else if(val !== null) {
+                    swal("Error", "Monto inválido.", "error");
+                }
+            });
+        }
+
+        function consultarSaldo() {
+            swal("Saldo Disponible", `Tu saldo actual es de $${saldo.toFixed(2)}`, "info");
         }
     </script>
 </body>

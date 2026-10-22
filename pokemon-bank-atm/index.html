@@ -36,7 +36,6 @@
         
         <form id="loginForm">
             <div class="form-group">
-                <!-- Se requiere PIN de 4 dígitos -->
                 <input type="password" class="form-control form-control-lg text-center" id="pinInput" maxlength="4" pattern="\d{4}" placeholder="****" required autocomplete="off">
             </div>
             <button type="submit" class="btn btn-primary btn-lg btn-block mt-4">Ingresar</button>
@@ -48,16 +47,19 @@
     
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Evita que la página se recargue
+            e.preventDefault(); 
             
             const pin = document.getElementById('pinInput').value;
             const testPin = "1234"; // Usuario de prueba según requerimiento
             
             if (pin === testPin) {
-                // Redirige a la pantalla de acciones si el PIN es correcto
+                // Si no existen datos previos, los inicializamos en 0
+                if(!localStorage.getItem('atm_saldo')) {
+                    localStorage.setItem('atm_saldo', '0');
+                    localStorage.setItem('atm_historial', JSON.stringify([]));
+                }
                 window.location.href = "acciones.html";
             } else {
-                // Alerta con SweetAlert si el PIN es incorrecto
                 swal("Error", "PIN incorrecto. Intente nuevamente.", "error");
                 document.getElementById('pinInput').value = "";
             }
