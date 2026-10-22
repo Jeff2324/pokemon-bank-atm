@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Bank - Cajero Automático</title>
+    <!-- Framework CSS: Bootstrap 4 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            padding-top: 2rem;
+        }
+        .header-info {
+            background: #007bff;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .action-btn {
+            height: 100px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+            transition: 0.3s;
+        }
+        .action-btn:hover {
+            background-color: #e9ecef;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Información de la cuenta y botón de salida -->
+        <div class="header-info d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h4 class="mb-1">Bienvenido, Ash Ketchum</h4>
+                <p class="mb-0"><strong>Cuenta N°:</strong> 0987654321</p>
+            </div>
+            <div class="mt-2 mt-md-0">
+                <a href="index.html" class="btn btn-danger">Salir de la sesión</a>
+            </div>
+        </div>
+
+        <h3 class="text-center mb-4">Seleccione una transacción</h3>
+
+        <!-- Opciones del cajero -->
+        <div class="row">
+            <div class="col-md-6">
+                <button class="btn btn-light btn-block action-btn text-primary" onclick="simularAccion('Depósito')">Depositar</button>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-light btn-block action-btn text-primary" onclick="simularAccion('Retiro')">Retirar</button>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-light btn-block action-btn text-primary" onclick="simularAccion('Consultar Saldo')">Consultar Saldo</button>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-light btn-block action-btn text-primary" onclick="simularAccion('Pago de Servicios (Agua, Luz, Internet, Telefonía)')">Pago de Servicios</button>
+            </div>
+        </div>
+        
+        <!-- Enlaces a las otras vistas requeridas -->
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <a href="historial.html" class="btn btn-secondary mr-2">Ver Historial de Transacciones</a>
+                <a href="grafico.html" class="btn btn-dark">Ver Gráfico de Análisis</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Librería SweetAlert para interacciones -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        function simularAccion(tipo) {
+            swal("Transacción seleccionada", "Has elegido: " + tipo + ".\n(En una app real, aquí se abriría el formulario correspondiente).", "info");
+        }
+    </script>
+</body>
+</html>

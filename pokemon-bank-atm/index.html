@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Bank - ATM Login</title>
+    <!-- Framework CSS: Bootstrap 4 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #e9ecef;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .bank-title {
+            color: #007bff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container text-center">
+        <h2 class="bank-title mb-4">Pokémon Bank</h2>
+        <p class="text-muted mb-4">Bienvenido. Ingrese su PIN para continuar.</p>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <!-- Se requiere PIN de 4 dígitos -->
+                <input type="password" class="form-control form-control-lg text-center" id="pinInput" maxlength="4" pattern="\d{4}" placeholder="****" required autocomplete="off">
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block mt-4">Ingresar</button>
+        </form>
+    </div>
+
+    <!-- Librería requerida: SweetAlert -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Evita que la página se recargue
+            
+            const pin = document.getElementById('pinInput').value;
+            const testPin = "1234"; // Usuario de prueba según requerimiento
+            
+            if (pin === testPin) {
+                // Redirige a la pantalla de acciones si el PIN es correcto
+                window.location.href = "acciones.html";
+            } else {
+                // Alerta con SweetAlert si el PIN es incorrecto
+                swal("Error", "PIN incorrecto. Intente nuevamente.", "error");
+                document.getElementById('pinInput').value = "";
+            }
+        });
+    </script>
+</body>
+</html>
