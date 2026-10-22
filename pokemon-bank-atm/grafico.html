@@ -15,7 +15,7 @@
                 <a href="acciones.html" class="btn btn-sm btn-light font-weight-bold">Volver al Menú</a>
             </div>
             <div class="card-body">
-
+                <!-- Contenedor del gráfico -->
                 <div style="max-width: 500px; margin: 0 auto;">
                     <canvas id="miGrafico"></canvas>
                 </div>
@@ -23,23 +23,35 @@
         </div>
     </div>
 
-
+    <!-- Librería requerida: Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
-        const ctx = document.getElementById('miGrafico').getContext('2d');
+        // Cargar historial del localStorage
+        const historial = JSON.parse(localStorage.getItem('atm_historial')) || [];
         
-        const miGrafico = new Chart(ctx, {
-            type: 'doughnut', // Tipo de gráfico (Dona)
+        let totalDepositos = 0, totalRetiros = 0, totalServicios = 0;
+        
+        // Sumar montos por categoría
+        historial.forEach(t => {
+            if (t.tipo === 'Depósito') totalDepositos += t.monto;
+            else if (t.tipo === 'Retiro') totalRetiros += Math.abs(t.monto);
+            else if (t.tipo === 'Pago de Servicio') totalServicios += Math.abs(t.monto);
+        });
+
+        // Configuración de Chart.js
+        const ctx = document.getElementById('miGrafico').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
             data: {
                 labels: ['Depósitos', 'Retiros', 'Pago de Servicios'],
                 datasets: [{
-                    label: 'Monto Total ($)',
-                    data: [500, 100, 75.50], // Datos simulados basados en el historial
+                    label: 'Monto Acumulado ($)',
+                    data: [totalDepositos, totalRetiros, totalServicios],
                     backgroundColor: [
-                        '#28a745', // Verde para depósitos
-                        '#dc3545', // Rojo para retiros
-                        '#ffc107'  // Amarillo para servicios
+                        '#28a745', // Verde
+                        '#dc3545', // Rojo
+                        '#ffc107'  // Amarillo
                     ],
                     borderWidth: 1
                 }]
@@ -52,7 +64,7 @@
                     },
                     title: {
                         display: true,
-                        text: 'Resumen de Movimientos (Último mes)'
+                        text: 'Resumen Histórico de Movimientos'
                     }
                 }
             }
