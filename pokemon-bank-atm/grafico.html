@@ -23,7 +23,6 @@
         </div>
     </div>
 
-    <!-- Librería requerida: Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
@@ -32,11 +31,15 @@
         
         let totalDepositos = 0, totalRetiros = 0, totalServicios = 0;
         
-        // Sumar montos por categoría
+        // Sumar montos por categoría validando el texto exacto
         historial.forEach(t => {
-            if (t.tipo === 'Depósito') totalDepositos += t.monto;
-            else if (t.tipo === 'Retiro') totalRetiros += Math.abs(t.monto);
-            else if (t.tipo === 'Pago de Servicio') totalServicios += Math.abs(t.monto);
+            if (t.tipo === 'Depósito') {
+                totalDepositos += t.monto;
+            } else if (t.tipo === 'Retiro') {
+                totalRetiros += Math.abs(t.monto);
+            } else if (t.tipo.includes('Pago de Servicio')) {
+                totalServicios += Math.abs(t.monto);
+            }
         });
 
         // Configuración de Chart.js
@@ -49,9 +52,9 @@
                     label: 'Monto Acumulado ($)',
                     data: [totalDepositos, totalRetiros, totalServicios],
                     backgroundColor: [
-                        '#28a745', // Verde
-                        '#dc3545', // Rojo
-                        '#ffc107'  // Amarillo
+                        '#28a745', // Verde para depósitos
+                        '#dc3545', // Rojo para retiros
+                        '#ffc107'  // Amarillo para servicios
                     ],
                     borderWidth: 1
                 }]

@@ -40,7 +40,7 @@
 <body>
 
     <div class="container">
-        <!-- Información de la cuenta y botón de salida -->
+        <!-- Información de la cuenta -->
         <div class="header-info d-flex justify-content-between align-items-center flex-wrap">
             <div>
                 <h4 class="mb-1">Bienvenido, Ash Ketchum</h4>
@@ -66,11 +66,11 @@
                 <button class="btn btn-light btn-block action-btn text-primary" onclick="consultarSaldo()">Consultar Saldo</button>
             </div>
             <div class="col-md-6">
-                <button class="btn btn-light btn-block action-btn text-primary" onclick="pagarServicio()">Pago de Servicios</button>
+                <!-- Este botón abre el Modal de Bootstrap -->
+                <button class="btn btn-light btn-block action-btn text-primary" data-toggle="modal" data-target="#modalServicios">Pago de Servicios</button>
             </div>
         </div>
         
-        <!-- Enlaces a las otras vistas requeridas -->
         <div class="row mt-4">
             <div class="col-12 text-center">
                 <a href="historial.html" class="btn btn-secondary mr-2">Ver Historial de Transacciones</a>
@@ -79,16 +79,37 @@
         </div>
     </div>
 
-    <!-- Librería SweetAlert -->
+    <!-- Modal de Bootstrap para seleccionar el servicio -->
+    <div class="modal fade" id="modalServicios" tabindex="-1" aria-labelledby="modalServiciosLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-dark text-white">
+            <h5 class="modal-title" id="modalServiciosLabel">Seleccione el servicio a pagar</h5>
+            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <button class="btn btn-outline-primary btn-block mb-3" onclick="procesarPago('Energía Eléctrica')">Energía Eléctrica</button>
+            <button class="btn btn-outline-primary btn-block mb-3" onclick="procesarPago('Internet')">Internet</button>
+            <button class="btn btn-outline-primary btn-block mb-3" onclick="procesarPago('Telefonía')">Telefonía</button>
+            <button class="btn btn-outline-primary btn-block mb-3" onclick="procesarPago('Agua Potable')">Agua Potable</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts de Bootstrap (Requeridos para el Modal) y SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    
     <script>
-        // Cargar estado inicial del localStorage
         let saldo = parseFloat(localStorage.getItem('atm_saldo')) || 0;
         let historial = JSON.parse(localStorage.getItem('atm_historial')) || [];
         
         document.getElementById('saldoVisual').innerText = saldo.toFixed(2);
 
-        // actualizamos datos
         function guardarEstado(tipo, monto) {
             const fecha = new Date().toLocaleDateString('es-SV');
             historial.push({ fecha, tipo, monto });
@@ -98,11 +119,8 @@
         }
 
         function depositar() {
-            swal({
-                text: "Ingrese el monto a depositar:",
-                content: "input",
-                button: { text: "Depositar" }
-            }).then(val => {
+            swal({ text: "Ingrese el monto a depositar:", content: "input", button: { text: "Depositar" } })
+            .then(val => {
                 let monto = parseFloat(val);
                 if (monto > 0) {
                     saldo += monto;
@@ -115,11 +133,8 @@
         }
 
         function retirar() {
-            swal({
-                text: "Ingrese el monto a retirar:",
-                content: "input",
-                button: { text: "Retirar" }
-            }).then(val => {
+            swal({ text: "Ingrese el monto a retirar:", content: "input", button: { text: "Retirar" } })
+            .then(val => {
                 let monto = parseFloat(val);
                 if (monto > 0 && monto <= saldo) {
                     saldo -= monto;
@@ -133,27 +148,34 @@
             });
         }
 
-        function pagarServicio() {
-            swal({
-                text: "Ingrese el monto del servicio a pagar:",
-                content: "input",
-                button: { text: "Pagar" }
-            }).then(val => {
-                let monto = parseFloat(val);
-                if (monto > 0 && monto <= saldo) {
-                    saldo -= monto;
-                    guardarEstado("Pago de Servicio", -monto);
-                    swal("Éxito", `Pago de $${monto.toFixed(2)} procesado.`, "success");
-                } else if (monto > saldo) {
-                    swal("Fondos insuficientes", "No tienes dinero suficiente.", "error");
-                } else if(val !== null) {
-                    swal("Error", "Monto inválido.", "error");
-                }
-            });
-        }
-
         function consultarSaldo() {
             swal("Saldo Disponible", `Tu saldo actual es de $${saldo.toFixed(2)}`, "info");
+        }
+
+        function procesarPago(servicio) {
+            // Cierra el modal de Bootstrap
+            $('#modalServicios').modal('hide');
+            
+            // Abre la alerta para ingresar el monto con un ligero retraso
+            setTimeout(() => {
+                swal({
+                    text: `Ingrese el monto a pagar de ${servicio}:`,
+                    content: "input",
+                    button: { text: "Pagar" }
+                }).then(val => {
+                    let monto = parseFloat(val);
+                    if (monto > 0 && monto <= saldo) {
+                        saldo -= monto;
+                        // Registra exactamente el servicio pagado en el historial
+                        guardarEstado(`Pago de Servicio: ${servicio}`, -monto);
+                        swal("Éxito", `Pago de $${monto.toFixed(2)} por ${servicio} procesado.`, "success");
+                    } else if (monto > saldo) {
+                        swal("Fondos insuficientes", "No tienes dinero suficiente.", "error");
+                    } else if(val !== null) {
+                        swal("Error", "Monto inválido.", "error");
+                    }
+                });
+            }, 400); 
         }
     </script>
 </body>
