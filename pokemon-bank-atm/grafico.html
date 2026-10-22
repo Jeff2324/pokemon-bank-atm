@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Gráfico - Pokémon Bank</title>
+    <!-- Framework CSS: Bootstrap 4 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light pt-4">
+    <div class="container">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Análisis de Transacciones</h4>
+                <a href="acciones.html" class="btn btn-sm btn-light font-weight-bold">Volver al Menú</a>
+            </div>
+            <div class="card-body">
+
+                <div style="max-width: 500px; margin: 0 auto;">
+                    <canvas id="miGrafico"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        const ctx = document.getElementById('miGrafico').getContext('2d');
+        
+        const miGrafico = new Chart(ctx, {
+            type: 'doughnut', // Tipo de gráfico (Dona)
+            data: {
+                labels: ['Depósitos', 'Retiros', 'Pago de Servicios'],
+                datasets: [{
+                    label: 'Monto Total ($)',
+                    data: [500, 100, 75.50], // Datos simulados basados en el historial
+                    backgroundColor: [
+                        '#28a745', // Verde para depósitos
+                        '#dc3545', // Rojo para retiros
+                        '#ffc107'  // Amarillo para servicios
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Resumen de Movimientos (Último mes)'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
